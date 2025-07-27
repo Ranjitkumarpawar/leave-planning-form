@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave Planning Form - Data Collection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            padding: 40px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .input-hint {
+            font-size: 14px;
+            color: #6c757d;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .section-description {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196f3;
+            font-size: 14px;
+            color: #1565c0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 1rem;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="number"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #4facfe;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .date-input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .date-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #e1e5e9;
+        }
+
+        .date-item input[type="date"] {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .date-item input[type="text"] {
+            background: white;
+        }
+
+        .holiday-item {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #ffeaa7;
+            margin-bottom: 10px;
+        }
+
+        .holiday-item input[type="date"] {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .holiday-item input[type="text"] {
+            background: white;
+            margin-bottom: 10px;
+        }
+
+        .holiday-item textarea {
+            background: white;
+            min-height: 60px;
+        }
+
+        .add-date-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 14px;
+            transition: background 0.3s ease;
+        }
+
+        .add-date-btn:hover {
+            background: #218838;
+        }
+
+        .add-holiday-btn {
+            background: #ffc107;
+            color: #212529;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 14px;
+            transition: background 0.3s ease;
+        }
+
+        .add-holiday-btn:hover {
+            background: #e0a800;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border-left: 5px solid #4facfe;
+        }
+
+        .form-section h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+            display: none;
+        }
+
+        .config-section {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ffeaa7;
+        }
+
+        .config-section h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .github-config {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .auth-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .auth-container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .auth-container h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .auth-container .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1rem;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .auth-input:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        .auth-btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 172, 254, 0.3);
+        }
+
+        .auth-error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+            display: none;
+        }
+
+        .user-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #b8daff;
+            text-align: center;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .header {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .form-container {
+                padding: 30px 20px;
+            }
+
+            .date-input-group {
+                grid-template-columns: 1fr;
+            }
+
+            .github-config {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏖️ Leave Planning Form</h1>
+            <p>Plan your time off and track upcoming holidays</p>
+        </div>
+
+        <div class="form-container">
+            <!-- Admin Configuration (Hidden from Users) -->
+            <div class="config-section" style="display: none;" id="adminSection">
+                <h4>🔧 GitHub Data Collection Setup (Admin Only)</h4>
+                <div class="section-description">
+                    Configure your private GitHub repository to collect form submissions as issues.
+                </div>
+                <div class="github-config">
+                    <div>
+                        <label for="githubOwner">GitHub Username:</label>
+                        <input type="text" id="githubOwner" placeholder="e.g., yourname" value="">
+                    </div>
+                    <div>
+                        <label for="githubRepo">Repository Name:</label>
+                        <input type="text" id="githubRepo" placeholder="e.g., leave-data-private" value="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="githubToken">GitHub Personal Access Token (Required for private repo):</label>
+                    <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxx">
+                    <div class="input-hint">Create at: GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic)</div>
+                </div>
+                <button type="button" onclick="toggleAdminSection()" class="logout-btn">Hide Admin Panel</button>
+            </div>
+
+            <!-- Admin Access Button (Double-click to show admin panel) -->
+            <div style="text-align: center; margin-bottom: 20px;">
+                <small style="color: #999; font-size: 12px;" ondblclick="toggleAdminSection()">
+                    📊 Data Collection Active
+                </small>
+            </div>
+
+            <div class="success-message" id="successMessage">
+                ✅ Your leave information has been submitted successfully!
+            </div>
+
+            <form id="leavePlanningForm">
+                <!-- Personal Information -->
+                <div class="form-section">
+                    <h3>👤 Personal Information</h3>
+                    <div class="section-description">
+                        Please provide your basic information for leave tracking and communication.
+                    </div>
+                    <div class="form-group">
+                        <label for="userName">Full Name <span class="required">*</span></label>
+                        <input type="text" id="userName" name="userName" required>
+                        <div class="input-hint">Enter your full name as it appears in company records</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="userEmail">Email Address <span class="required">*</span></label>
+                        <input type="email" id="userEmail" name="userEmail" required>
+                        <div class="input-hint">Your work email address for official communication</div>
+                    </div>
+                </div>
+
+                <!-- Current Month Leave Count -->
+                <div class="form-section">
+                    <h3 id="currentMonthTitle">📊 Current Month</h3>
+                    <div class="section-description">
+                        Track your total leave days taken this month, including weekends, holidays, and personal time off.
+                    </div>
+                    <div class="form-group">
+                        <label for="totalLeaveCount">Total leave count of this month (Including regional holidays) <span class="required">*</span></label>
+                        <input type="number" id="totalLeaveCount" name="totalLeaveCount" min="0" max="31" required>
+                        <div class="input-hint">Include all types of leave: vacation, sick days, personal days, and regional holidays</div>
+                    </div>
+                </div>
+
+                <!-- Rest of Current Month Plans -->
+                <div class="form-section">
+                    <h3 id="currentMonthPlansTitle">🗓️ Leave Plans for Rest of Current Month</h3>
+                    <div class="section-description">
+                        Add any remaining planned leave days for this month. You can add multiple dates if needed.
+                    </div>
+                    <div class="form-group">
+                        <label>Leave plans for rest of this month (With Dates):</label>
+                        <div id="currentMonthLeavePlans">
+                            <div class="date-item">
+                                <input type="date" id="currentMonthDate" name="currentMonthLeaveDate[]">
+                                <input type="text" name="currentMonthLeaveReason[]" placeholder="Reason for leave (optional)">
+                            </div>
+                        </div>
+                        <button type="button" class="add-date-btn" onclick="addCurrentMonthLeave()">+ Add Another Date</button>
+                    </div>
+                </div>
+
+                <!-- Next Month Plans -->
+                <div class="form-section">
+                    <h3 id="nextMonthPlansTitle">🌟 Leave Plans for Next Month</h3>
+                    <div class="section-description">
+                        Plan ahead by adding your expected leave days for next month. This helps with team planning and workload distribution.
+                    </div>
+                    <div class="form-group">
+                        <label id="nextMonthLabel">Leave plans for next month (With Dates):</label>
+                        <div id="nextMonthLeavePlans">
+                            <div class="date-item">
+                                <input type="date" id="nextMonthDate" name="nextMonthLeaveDate[]">
+                                <input type="text" name="nextMonthLeaveReason[]" placeholder="Reason for leave (optional)">
+                            </div>
+                        </div>
+                        <button type="button" class="add-date-btn" onclick="addNextMonthLeave()">+ Add Another Date</button>
+                    </div>
+                </div>
+
+                <!-- Next Month Holidays -->
+                <div class="form-section">
+                    <h3 id="nextMonthHolidaysTitle">🎉 Upcoming Holidays for Next Month</h3>
+                    <div class="section-description">
+                        Add relevant holidays that may affect work schedules. Include national, regional, religious, or company-specific holidays.
+                    </div>
+                    <div class="form-group">
+                        <label id="nextMonthHolidaysLabel">Add upcoming holidays for next month:</label>
+                        <div id="holidaysList">
+                            <div class="holiday-item">
+                                <label>Holiday Date:</label>
+                                <input type="date" name="holidayDate[]">
+                                <label>Holiday Name:</label>
+                                <input type="text" name="holidayName[]" placeholder="e.g., Independence Day, Christmas, New Year">
+                                <label>Holiday Type/Notes:</label>
+                                <textarea name="holidayComment[]" placeholder="e.g., National Holiday, Regional Holiday, Company Holiday, Personal/Cultural Holiday"></textarea>
+                            </div>
+                        </div>
+                        <button type="button" class="add-holiday-btn" onclick="addHoliday()">+ Add Another Holiday</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="additionalHolidayNotes">Additional Holiday Information:</label>
+                        <textarea id="additionalHolidayNotes" name="additionalHolidayNotes" placeholder="Any additional notes about holidays, local observances, or company-specific policies..."></textarea>
+                        <div class="input-hint">Mention any special arrangements, half-days, or local customs that might affect work</div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">📤 Submit Leave Information</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Admin panel toggle function
+        function toggleAdminSection() {
+            const adminSection = document.getElementById('adminSection');
+            if (adminSection.style.display === 'none') {
+                adminSection.style.display = 'block';
+            } else {
+                adminSection.style.display = 'none';
+            }
+        }
+
+        // Global variables for current date calculations
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth();
+        const currentYear = currentDate.getFullYear();
+        const nextMonth = currentMonth === 11 ? 0 : currentMonth + 1;
+        const nextMonthYear = currentMonth === 11 ? currentYear + 1 : currentYear;
+        
+        const monthNames = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+
+        // Initialize the form with dynamic dates
+        function initializeDynamicDates() {
+            const currentMonthName = monthNames[currentMonth];
+            const nextMonthName = monthNames[nextMonth];
+            
+            // Update titles
+            document.getElementById('currentMonthTitle').textContent = `📊 Current Month (${currentMonthName} ${currentYear})`;
+            document.getElementById('currentMonthPlansTitle').textContent = `🗓️ Leave Plans for Rest of ${currentMonthName} ${currentYear}`;
+            document.getElementById('nextMonthPlansTitle').textContent = `🌟 Leave Plans for ${nextMonthName} ${nextMonthYear}`;
+            document.getElementById('nextMonthHolidaysTitle').textContent = `🎉 Upcoming Holidays for ${nextMonthName} ${nextMonthYear}`;
+            document.getElementById('nextMonthLabel').textContent = `Leave plans for ${nextMonthName} ${nextMonthYear} (With Dates):`;
+            document.getElementById('nextMonthHolidaysLabel').textContent = `Add upcoming holidays for ${nextMonthName} ${nextMonthYear}:`;
+            
+            // Set date constraints
+            const today = currentDate.toISOString().split('T')[0];
+            const currentMonthEnd = new Date(currentYear, currentMonth + 1, 0).toISOString().split('T')[0];
+            const nextMonthStart = new Date(nextMonthYear, nextMonth, 1).toISOString().split('T')[0];
+            const nextMonthEnd = new Date(nextMonthYear, nextMonth + 1, 0).toISOString().split('T')[0];
+            
+            // Set min/max for current month dates
+            document.getElementById('currentMonthDate').min = today;
+            document.getElementById('currentMonthDate').max = currentMonthEnd;
+            
+            // Set min/max for next month dates
+            document.getElementById('nextMonthDate').min = nextMonthStart;
+            document.getElementById('nextMonthDate').max = nextMonthEnd;
+            
+            // Set default dates for holidays in next month
+            const holidayDateInputs = document.querySelectorAll('input[name="holidayDate[]"]');
+            holidayDateInputs.forEach(input => {
+                input.min = nextMonthStart;
+                input.max = nextMonthEnd;
+            });
+        }
+
+        function addCurrentMonthLeave() {
+            const container = document.getElementById('currentMonthLeavePlans');
+            const today = currentDate.toISOString().split('T')[0];
+            const currentMonthEnd = new Date(currentYear, currentMonth + 1, 0).toISOString().split('T')[0];
+            
+            const newItem = document.createElement('div');
+            newItem.className = 'date-item';
+            newItem.innerHTML = `
+                <input type="date" name="currentMonthLeaveDate[]" min="${today}" max="${currentMonthEnd}">
+                <input type="text" name="currentMonthLeaveReason[]" placeholder="Reason for leave (optional)">
+                <button type="button" onclick="removeLeaveItem(this)" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 5px; margin-top: 5px; cursor: pointer;">Remove</button>
+            `;
+            container.appendChild(newItem);
+        }
+
+        function addNextMonthLeave() {
+            const container = document.getElementById('nextMonthLeavePlans');
+            const nextMonthStart = new Date(nextMonthYear, nextMonth, 1).toISOString().split('T')[0];
+            const nextMonthEnd = new Date(nextMonthYear, nextMonth + 1, 0).toISOString().split('T')[0];
+            
+            const newItem = document.createElement('div');
+            newItem.className = 'date-item';
+            newItem.innerHTML = `
+                <input type="date" name="nextMonthLeaveDate[]" min="${nextMonthStart}" max="${nextMonthEnd}">
+                <input type="text" name="nextMonthLeaveReason[]" placeholder="Reason for leave (optional)">
+                <button type="button" onclick="removeLeaveItem(this)" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 5px; margin-top: 5px; cursor: pointer;">Remove</button>
+            `;
+            container.appendChild(newItem);
+        }
+
+        function addHoliday() {
+            const container = document.getElementById('holidaysList');
+            const nextMonthStart = new Date(nextMonthYear, nextMonth, 1).toISOString().split('T')[0];
+            const nextMonthEnd = new Date(nextMonthYear, nextMonth + 1, 0).toISOString().split('T')[0];
+            
+            const newItem = document.createElement('div');
+            newItem.className = 'holiday-item';
+            newItem.innerHTML = `
+                <label>Holiday Date:</label>
+                <input type="date" name="holidayDate[]" min="${nextMonthStart}" max="${nextMonthEnd}">
+                <label>Holiday Name:</label>
+                <input type="text" name="holidayName[]" placeholder="e.g., Independence Day, Christmas, New Year">
+                <label>Holiday Type/Notes:</label>
+                <textarea name="holidayComment[]" placeholder="e.g., National Holiday, Regional Holiday, Company Holiday, Personal/Cultural Holiday"></textarea>
+                <button type="button" onclick="removeHolidayItem(this)" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 5px; margin-top: 5px; cursor: pointer;">Remove Holiday</button>
+            `;
+            container.appendChild(newItem);
+        }
+
+        function removeLeaveItem(button) {
+            button.parentElement.remove();
+        }
+
+        function removeHolidayItem(button) {
+            button.parentElement.remove();
+        }
+
+        // GitHub API integration for data collection
+        async function submitToGitHub(data) {
+            const owner = document.getElementById('githubOwner').value;
+            const repo = document.getElementById('githubRepo').value;
+            const token = document.getElementById('githubToken').value;
+
+            if (!owner || !repo) {
+                alert('Please configure GitHub repository settings first!');
+                return false;
+            }
+
+            const currentMonthName = monthNames[currentMonth];
+            const nextMonthName = monthNames[nextMonth];
+            
+            // Create issue title
+            const title = `Leave Planning: ${data.userName} - ${currentMonthName}/${nextMonthName} ${currentYear}`;
+            
+            // Create formatted issue body
+            let body = `## Leave Planning Submission\n\n`;
+            body += `**Submitted by:** ${data.userName}\n`;
+            body += `**Email:** ${data.userEmail}\n`;
+            body += `**Submission Date:** ${new Date().toLocaleString()}\n\n`;
+            
+            body += `### 📊 Current Month (${currentMonthName} ${currentYear})\n`;
+            body += `**Total Leave Count:** ${data.totalLeaveCount} days\n\n`;
+            
+            body += `### 🗓️ Remaining ${currentMonthName} Leave Plans\n`;
+            if (data.currentMonthLeavePlans.length > 0) {
+                data.currentMonthLeavePlans.forEach(plan => {
+                    body += `- **${plan.date}**${plan.reason ? ` - ${plan.reason}` : ''}\n`;
+                });
+            } else {
+                body += `No leave planned for rest of ${currentMonthName}\n`;
+            }
+            body += `\n`;
+            
+            body += `### 🌟 ${nextMonthName} ${nextMonthYear} Leave Plans\n`;
+            if (data.nextMonthLeavePlans.length > 0) {
+                data.nextMonthLeavePlans.forEach(plan => {
+                    body += `- **${plan.date}**${plan.reason ? ` - ${plan.reason}` : ''}\n`;
+                });
+            } else {
+                body += `No leave planned for ${nextMonthName}\n`;
+            }
+            body += `\n`;
+            
+            body += `### 🎉 ${nextMonthName} ${nextMonthYear} Holidays\n`;
+            if (data.holidays.length > 0) {
+                data.holidays.forEach(holiday => {
+                    body += `- **${holiday.date}**: ${holiday.name}${holiday.comment ? ` (${holiday.comment})` : ''}\n`;
+                });
+            } else {
+                body += `No specific holidays added\n`;
+            }
+            
+            if (data.additionalHolidayNotes) {
+                body += `\n**Additional Notes:** ${data.additionalHolidayNotes}\n`;
+            }
+
+            const issueData = {
+                title: title,
+                body: body,
+                labels: ['leave-planning', 'submitted', currentMonthName.toLowerCase()]
+            };
+
+            try {
+                const headers = {
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Content-Type': 'application/json'
+                };
+
+                if (token) {
+                    headers['Authorization'] = `token ${token}`;
+                }
+
+                const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/issues`, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify(issueData)
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log('Issue created successfully:', result.html_url);
+                    return true;
+                } else {
+                    console.error('Failed to create issue:', response.statusText);
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error submitting to GitHub:', error);
+                return false;
+            }
+        }
+
+        // Form submission handler
+        document.getElementById('leavePlanningForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Collect form data
+            const formData = new FormData(this);
+            const data = {};
+            
+            // Get basic fields
+            data.userName = formData.get('userName');
+            data.userEmail = formData.get('userEmail');
+            data.totalLeaveCount = formData.get('totalLeaveCount');
+            data.additionalHolidayNotes = formData.get('additionalHolidayNotes');
+            
+            // Get current month leave plans
+            const currentMonthDates = formData.getAll('currentMonthLeaveDate[]');
+            const currentMonthReasons = formData.getAll('currentMonthLeaveReason[]');
+            data.currentMonthLeavePlans = currentMonthDates.map((date, index) => ({
+                date: date,
+                reason: currentMonthReasons[index] || ''
+            })).filter(item => item.date);
+            
+            // Get next month leave plans
+            const nextMonthDates = formData.getAll('nextMonthLeaveDate[]');
+            const nextMonthReasons = formData.getAll('nextMonthLeaveReason[]');
+            data.nextMonthLeavePlans = nextMonthDates.map((date, index) => ({
+                date: date,
+                reason: nextMonthReasons[index] || ''
+            })).filter(item => item.date);
+            
+            // Get holidays
+            const holidayDates = formData.getAll('holidayDate[]');
+            const holidayNames = formData.getAll('holidayName[]');
+            const holidayComments = formData.getAll('holidayComment[]');
+            data.holidays = holidayDates.map((date, index) => ({
+                date: date,
+                name: holidayNames[index] || '',
+                comment: holidayComments[index] || ''
+            })).filter(item => item.date);
+            
+            console.log('Form Data:', data);
+            
+            // Try to submit to GitHub
+            const githubSuccess = await submitToGitHub(data);
+            
+            if (githubSuccess) {
+                document.getElementById('successMessage').innerHTML = '✅ Your leave information has been submitted to GitHub successfully!';
+            } else {
+                document.getElementById('successMessage').innerHTML = '⚠️ Form submitted locally. GitHub submission failed - check console for details.';
+            }
+            
+            document.getElementById('successMessage').style.display = 'block';
+            
+            // Also create downloadable file as backup
+            createDownloadableFile(data);
+            
+            // Scroll to top to show success message
+            document.querySelector('.container').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        function createDownloadableFile(data) {
+            const currentMonthName = monthNames[currentMonth];
+            const nextMonthName = monthNames[nextMonth];
+            
+            let content = `Leave Planning Information - ${data.userName}\n`;
+            content += `==========================================\n\n`;
+            content += `Submitted: ${new Date().toLocaleString()}\n`;
+            content += `Name: ${data.userName}\n`;
+            content += `Email: ${data.userEmail}\n\n`;
+            
+            content += `1. Total leave count for ${currentMonthName} ${currentYear}: ${data.totalLeaveCount}\n\n`;
+            
+            content += `2. Leave plans for rest of ${currentMonthName} ${currentYear}:\n`;
+            if (data.currentMonthLeavePlans.length > 0) {
+                data.currentMonthLeavePlans.forEach(plan => {
+                    content += `   - ${plan.date}${plan.reason ? ` (${plan.reason})` : ''}\n`;
+                });
+            } else {
+                content += `   - No leave planned\n`;
+            }
+            content += `\n`;
+            
+            content += `3. Leave plans for ${nextMonthName} ${nextMonthYear}:\n`;
+            if (data.nextMonthLeavePlans.length > 0) {
+                data.nextMonthLeavePlans.forEach(plan => {
+                    content += `   - ${plan.date}${plan.reason ? ` (${plan.reason})` : ''}\n`;
+                });
+            } else {
+                content += `   - No leave planned\n`;
+            }
+            content += `\n`;
+            
+            content += `4. Holidays for ${nextMonthName} ${nextMonthYear}:\n`;
+            if (data.holidays.length > 0) {
+                data.holidays.forEach(holiday => {
+                    content += `   - ${holiday.date}: ${holiday.name}${holiday.comment ? ` (${holiday.comment})` : ''}\n`;
+                });
+            } else {
+                content += `   - No holidays specified\n`;
+            }
+            
+            if (data.additionalHolidayNotes) {
+                content += `\nAdditional Notes: ${data.additionalHolidayNotes}\n`;
+            }
+            
+            // Create downloadable file
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `leave_planning_${data.userName.replace(/\s+/g, '_')}_${Date.now()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Initialize the form when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDynamicDates();
+            
+            // Load saved GitHub config from localStorage
+            const savedOwner = localStorage.getItem('githubOwner');
+            const savedRepo = localStorage.getItem('githubRepo');
+            const savedToken = localStorage.getItem('githubToken');
+            
+            if (savedOwner) document.getElementById('githubOwner').value = savedOwner;
+            if (savedRepo) document.getElementById('githubRepo').value = savedRepo;
+            if (savedToken) document.getElementById('githubToken').value = savedToken;
+            
+            // Save GitHub config to localStorage when changed
+            document.getElementById('githubOwner').addEventListener('change', function() {
+                localStorage.setItem('githubOwner', this.value);
+            });
+            document.getElementById('githubRepo').addEventListener('change', function() {
+                localStorage.setItem('githubRepo', this.value);
+            });
+            document.getElementById('githubToken').addEventListener('change', function() {
+                localStorage.setItem('githubToken', this.value);
+            });
+        });
+    </script>
+</body>
+</html>
