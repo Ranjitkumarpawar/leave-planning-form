@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave Planning Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            padding: 40px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .input-hint {
+            font-size: 14px;
+            color: #6c757d;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .section-description {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196f3;
+            font-size: 14px;
+            color: #1565c0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 1rem;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="number"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #4facfe;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .date-input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .date-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #e1e5e9;
+        }
+
+        .date-item input[type="date"] {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .date-item input[type="text"] {
+            background: white;
+        }
+
+        .holiday-item {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #ffeaa7;
+            margin-bottom: 10px;
+        }
+
+        .holiday-item input[type="date"] {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .holiday-item input[type="text"] {
+            background: white;
+            margin-bottom: 10px;
+        }
+
+        .holiday-item textarea {
+            background: white;
+            min-height: 60px;
+        }
+
+        .add-date-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 14px;
+            transition: background 0.3s ease;
+        }
+
+        .add-date-btn:hover {
+            background: #218838;
+        }
+
+        .add-holiday-btn {
+            background: #ffc107;
+            color: #212529;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 14px;
+            transition: background 0.3s ease;
+        }
+
+        .add-holiday-btn:hover {
+            background: #e0a800;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border-left: 5px solid #4facfe;
+        }
+
+        .form-section h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .header {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .form-container {
+                padding: 30px 20px;
+            }
+
+            .date-input-group {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏖️ Leave Planning Form</h1>
+            <p>Plan your time off and track upcoming holidays</p>
+        </div>
+
+        <div class="form-container">
+            <div class="success-message" id="successMessage">
+                ✅ Your leave information has been submitted successfully!
+            </div>
+
+            <form id="leavePlanningForm">
+                <!-- Personal Information -->
+                <div class="form-section">
+                    <h3>👤 Personal Information</h3>
+                    <div class="section-description">
+                        Please provide your basic information for leave tracking and communication.
+                    </div>
+                    <div class="form-group">
+                        <label for="userName">Full Name <span class="required">*</span></label>
+                        <input type="text" id="userName" name="userName" required>
+                        <div class="input-hint">Enter your full name as it appears in company records</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="userEmail">Email Address <span class="required">*</span></label>
+                        <input type="email" id="userEmail" name="userEmail" required>
+                        <div class="input-hint">Your work email address for official communication</div>
+                    </div>
+                </div>
+
+                <!-- Current Month Leave Count -->
+                <div class="form-section">
+                    <h3 id="currentMonthTitle">📊 Current Month</h3>
+                    <div class="section-description">
+                        Track your total leave days taken this month, including weekends, holidays, and personal time off.
+                    </div>
+                    <div class="form-group">
+                        <label for="totalLeaveCount">Total leave count of this month (Including regional holidays) <span class="required">*</span></label>
+                        <input type="number" id="totalLeaveCount" name="totalLeaveCount" min="0" max="31" required>
+                        <div class="input-hint">Include all types of leave: vacation, sick days, personal days, and regional holidays</div>
+                    </div>
+                </div>
+
+                <!-- Rest of Current Month Plans -->
+                <div class="form-section">
+                    <h3 id="currentMonthPlansTitle">🗓️ Leave Plans for Rest of Current Month</h3>
+                    <div class="section-description">
+                        Add any remaining planned leave days for this month. You can add multiple dates if needed.
+                    </div>
+                    <div class="form-group">
+                        <label>Leave plans for rest of this month (With Dates):</label>
+                        <div id="currentMonthLeavePlans">
+                            <div class="date-item">
+                                <input type="date" id="currentMonthDate" name="currentMonthLeaveDate[]">
+                                <input type="text" name="currentMonthLeaveReason[]" placeholder="Reason for leave (optional)">
+                            </div>
+                        </div>
+                        <button type="button" class="add-date-btn" onclick="addCurrentMonthLeave()">+ Add Another Date</button>
+                    </div>
+                </div>
+
+                <!-- Next Month Plans -->
+                <div class="form-section">
+                    <h3 id="nextMonthPlansTitle">🌟 Leave Plans for Next Month</h3>
+                    <div class="section-description">
+                        Plan ahead by adding your expected leave days for next month. This helps with team planning and workload distribution.
+                    </div>
+                    <div class="form-group">
+                        <label id="nextMonthLabel">Leave plans for next month (With Dates):</label>
+                        <div id="nextMonthLeavePlans">
+                            <div class="date-item">
+                                <input type="date" id="nextMonthDate" name="nextMonthLeaveDate[]">
+                                <input type="text" name="nextMonthLeaveReason[]" placeholder="Reason for leave (optional)">
+                            </div>
+                        </div>
+                        <button type="button" class="add-date-btn" onclick="addNextMonthLeave()">+ Add Another Date</button>
+                    </div>
+                </div>
+
+                <!-- Next Month Holidays -->
+                <div class="form-section">
+                    <h3 id="nextMonthHolidaysTitle">🎉 Upcoming Holidays for Next Month</h3>
+                    <div class="section-description">
+                        Add relevant holidays that may affect work schedules. Include national, regional, religious, or company-specific holidays.
+                    </div>
+                    <div class="form-group">
+                        <label id="nextMonthHolidaysLabel">Add upcoming holidays for next month:</label>
+                        <div id="holidaysList">
+                            <div class="holiday-item">
+                                <label>Holiday Date:</label>
+                                <input type="date" name="holidayDate[]">
+                                <label>Holiday Name:</label>
+                                <input type="text" name="holidayName[]" placeholder="e.g., Independence Day, Christmas, New Year">
+                                <label>Holiday Type/Notes:</label>
+                                <textarea name="holidayComment[]" placeholder="e.g., National Holiday, Regional Holiday, Company Holiday, Personal/Cultural Holiday"></textarea>
+                            </div>
+                        </div>
+                        <button type="button" class="add-holiday-btn" onclick="addHoliday()">+ Add Another Holiday</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="additionalHolidayNotes">Additional Holiday Information:</label>
+                        <textarea id="additionalHolidayNotes" name="additionalHolidayNotes" placeholder="Any additional notes about holidays, local observances, or company-specific policies..."></textarea>
+                        <div class="input-hint">Mention any special arrangements, half-days, or local customs that might affect work</div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">📤 Submit Leave Information</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Global variables for current date calculations
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth();
+        const currentYear = currentDate.getFullYear();
+        const nextMonth = currentMonth === 11 ? 0 : currentMonth + 1;
+        const nextMonthYear = currentMonth === 11 ? currentYear + 1 : currentYear;
+        
+        const monthNames = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+
+        // Initialize the form with dynamic dates
+        function initializeDynamicDates() {
+            const currentMonthName = monthNames[currentMonth];
+            const nextMonthName = monthNames[nextMonth];
+            
+            // Update titles
+            document.getElementById('currentMonthTitle').textContent = `📊 Current Month (${currentMonthName} ${currentYear})`;
+            document.getElementById('currentMonthPlansTitle').textContent = `🗓️ Leave Plans for Rest of ${currentMonthName} ${currentYear}`;
+            document.getElementById('nextMonthPlansTitle').textContent = `🌟 Leave Plans for ${nextMonthName} ${nextMonthYear}`;
+            document.getElementById('nextMonthHolidaysTitle').textContent = `🎉 Upcoming Holidays for ${nextMonthName} ${nextMonthYear}`;
+            document.getElementById('nextMonthLabel').textContent = `Leave plans for ${nextMonthName} ${nextMonthYear} (With Dates):`;
+            document.getElementById('nextMonthHolidaysLabel').textContent = `Add upcoming holidays for ${nextMonthName} ${nextMonthYear}:`;
+            
+            // Set date constraints
+            const today = currentDate.toISOString().split('T')[0];
+            const currentMonthEnd = new Date(currentYear, currentMonth + 1, 0).toISOString().split('T')[0];
+            const nextMonthStart = new Date(nextMonthYear, nextMonth, 1).toISOString().split('T')[0];
+            const nextMonthEnd = new Date(nextMonthYear, nextMonth + 1, 0).toISOString().split('T')[0];
+            
+            // Set min/max for current month dates
+            document.getElementById('currentMonthDate').min = today;
+            document.getElementById('currentMonthDate').max = currentMonthEnd;
+            
+            // Set min/max for next month dates
+            document.getElementById('nextMonthDate').min = nextMonthStart;
+            document.getElementById('nextMonthDate').max = nextMonthEnd;
+            
+            // Set default dates for holidays in next month
+            const holidayDateInputs = document.querySelectorAll('input[name="holidayDate[]"]');
+            holidayDateInputs.forEach(input => {
+                input.min = nextMonthStart;
+                input.max = nextMonthEnd;
+            });
+        }
+
+        function addCurrentMonthLeave() {
+            const container = document.getElementById('currentMonthLeavePlans');
+            const today = currentDate.toISOString().split('T')[0];
+            const currentMonthEnd = new Date(currentYear, currentMonth + 1, 0).toISOString().split('T')[0];
+            
+            const newItem = document.createElement('div');
+            newItem.className = 'date-item';
+            newItem.innerHTML = `
+                <input type="date" name="currentMonthLeaveDate[]" min="${today}" max="${currentMonthEnd}">
+                <input type="text" name="currentMonthLeaveReason[]" placeholder="Reason for leave (optional)">
+                <button type="button" onclick="removeLeaveItem(this)" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 5px; margin-top: 5px; cursor: pointer;">Remove</button>
+            `;
+            container.appendChild(newItem);
+        }
+
+        function addNextMonthLeave() {
+            const container = document.getElementById('nextMonthLeavePlans');
+            const nextMonthStart = new Date(nextMonthYear, nextMonth, 1).toISOString().split('T')[0];
+            const nextMonthEnd = new Date(nextMonthYear, nextMonth + 1, 0).toISOString().split('T')[0];
+            
+            const newItem = document.createElement('div');
+            newItem.className = 'date-item';
+            newItem.innerHTML = `
+                <input type="date" name="nextMonthLeaveDate[]" min="${nextMonthStart}" max="${nextMonthEnd}">
+                <input type="text" name="nextMonthLeaveReason[]" placeholder="Reason for leave (optional)">
+                <button type="button" onclick="removeLeaveItem(this)" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 5px; margin-top: 5px; cursor: pointer;">Remove</button>
+            `;
+            container.appendChild(newItem);
+        }
+
+        function addHoliday() {
+            const container = document.getElementById('holidaysList');
+            const nextMonthStart = new Date(nextMonthYear, nextMonth, 1).toISOString().split('T')[0];
+            const nextMonthEnd = new Date(nextMonthYear, nextMonth + 1, 0).toISOString().split('T')[0];
+            
+            const newItem = document.createElement('div');
+            newItem.className = 'holiday-item';
+            newItem.innerHTML = `
+                <label>Holiday Date:</label>
+                <input type="date" name="holidayDate[]" min="${nextMonthStart}" max="${nextMonthEnd}">
+                <label>Holiday Name:</label>
+                <input type="text" name="holidayName[]" placeholder="e.g., Independence Day, Christmas, New Year">
+                <label>Holiday Type/Notes:</label>
+                <textarea name="holidayComment[]" placeholder="e.g., National Holiday, Regional Holiday, Company Holiday, Personal/Cultural Holiday"></textarea>
+                <button type="button" onclick="removeHolidayItem(this)" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 5px; margin-top: 5px; cursor: pointer;">Remove Holiday</button>
+            `;
+            container.appendChild(newItem);
+        }
+
+        function removeLeaveItem(button) {
+            button.parentElement.remove();
+        }
+
+        function removeHolidayItem(button) {
+            button.parentElement.remove();
+        }
+
+        // Legacy functions for backward compatibility (will be removed)
+        function addJulyLeave() { addCurrentMonthLeave(); }
+        function addAugustLeave() { addNextMonthLeave(); }
+
+        // Form submission handler
+        document.getElementById('leavePlanningForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect form data
+            const formData = new FormData(this);
+            const data = {};
+            
+            // Get basic fields
+            data.userName = formData.get('userName');
+            data.userEmail = formData.get('userEmail');
+            data.totalLeaveCount = formData.get('totalLeaveCount');
+            data.additionalHolidayNotes = formData.get('additionalHolidayNotes');
+            
+            // Get current month leave plans
+            const currentMonthDates = formData.getAll('currentMonthLeaveDate[]');
+            const currentMonthReasons = formData.getAll('currentMonthLeaveReason[]');
+            data.currentMonthLeavePlans = currentMonthDates.map((date, index) => ({
+                date: date,
+                reason: currentMonthReasons[index] || ''
+            })).filter(item => item.date);
+            
+            // Get next month leave plans
+            const nextMonthDates = formData.getAll('nextMonthLeaveDate[]');
+            const nextMonthReasons = formData.getAll('nextMonthLeaveReason[]');
+            data.nextMonthLeavePlans = nextMonthDates.map((date, index) => ({
+                date: date,
+                reason: nextMonthReasons[index] || ''
+            })).filter(item => item.date);
+            
+            // Get holidays
+            const holidayDates = formData.getAll('holidayDate[]');
+            const holidayNames = formData.getAll('holidayName[]');
+            const holidayComments = formData.getAll('holidayComment[]');
+            data.holidays = holidayDates.map((date, index) => ({
+                date: date,
+                name: holidayNames[index] || '',
+                comment: holidayComments[index] || ''
+            })).filter(item => item.date);
+            
+            // Here you would typically send the data to your backend
+            console.log('Form Data:', data);
+            
+            // For demo purposes, we'll just show a success message
+            document.getElementById('successMessage').style.display = 'block';
+            
+            // Create email body for the user to copy
+            createEmailBody(data);
+            
+            // Scroll to top to show success message
+            document.querySelector('.container').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        function createEmailBody(data) {
+            const currentMonthName = monthNames[currentMonth];
+            const nextMonthName = monthNames[nextMonth];
+            
+            let emailBody = `Subject: Leave Planning Information - ${data.userName}\n\n`;
+            emailBody += `Dear Team,\n\n`;
+            emailBody += `Please find my leave planning information below:\n\n`;
+            emailBody += `Name: ${data.userName}\n`;
+            emailBody += `Email: ${data.userEmail}\n\n`;
+            emailBody += `1. Total leave count of this month (Including regional holidays): ${data.totalLeaveCount}\n\n`;
+            
+            emailBody += `2. Leave plans for rest of ${currentMonthName} ${currentYear} (With Dates):\n`;
+            if (data.currentMonthLeavePlans.length > 0) {
+                data.currentMonthLeavePlans.forEach(plan => {
+                    emailBody += `   - ${plan.date}${plan.reason ? ` (${plan.reason})` : ''}\n`;
+                });
+            } else {
+                emailBody += `   - No leave planned for rest of ${currentMonthName}\n`;
+            }
+            emailBody += `\n`;
+            
+            emailBody += `3. Leave plans for ${nextMonthName} ${nextMonthYear} (With Dates):\n`;
+            if (data.nextMonthLeavePlans.length > 0) {
+                data.nextMonthLeavePlans.forEach(plan => {
+                    emailBody += `   - ${plan.date}${plan.reason ? ` (${plan.reason})` : ''}\n`;
+                });
+            } else {
+                emailBody += `   - No leave planned for ${nextMonthName}\n`;
+            }
+            emailBody += `\n`;
+            
+            emailBody += `4. Upcoming holidays for ${nextMonthName} ${nextMonthYear}:\n`;
+            if (data.holidays.length > 0) {
+                data.holidays.forEach(holiday => {
+                    emailBody += `   - ${holiday.date}: ${holiday.name}${holiday.comment ? ` (${holiday.comment})` : ''}\n`;
+                });
+            } else {
+                emailBody += `   - No specific holidays added\n`;
+            }
+            
+            if (data.additionalHolidayNotes) {
+                emailBody += `\n   Additional Notes: ${data.additionalHolidayNotes}\n`;
+            }
+            
+            emailBody += `\n\nBest regards,\n${data.userName}`;
+            
+            // Create a downloadable text file with the email content
+            const blob = new Blob([emailBody], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `leave_planning_${data.userName.replace(/\s+/g, '_')}_${currentMonthName}_${nextMonthName}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            alert('Success! Your leave information has been compiled and downloaded as a text file that you can copy into an email.');
+        }
+
+        // Auto-populate holiday suggestions removed since work location field is removed
+        
+        // Initialize the form when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDynamicDates();
+        });
+    </script>
+</body>
+</html>
