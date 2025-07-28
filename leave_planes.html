@@ -310,6 +310,7 @@
                 <h4>🔧 GitHub Data Collection Setup (Admin Only)</h4>
                 <div class="section-description">
                     Configure your private GitHub repository to collect form submissions as issues.
+                    <br><strong>Note:</strong> After configuration, the settings will be saved in the form permanently for all users.
                 </div>
                 <div class="github-config">
                     <div>
@@ -326,7 +327,12 @@
                     <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxx">
                     <div class="input-hint">Create at: GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic)</div>
                 </div>
-                <button type="button" onclick="toggleAdminSection()" class="logout-btn">Hide Admin Panel</button>
+                <div style="margin-bottom: 15px;">
+                    <button type="button" onclick="testGitHubConnection()" style="background: #28a745; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; margin-right: 10px;">Test Connection</button>
+                    <button type="button" onclick="saveConfigToFile()" style="background: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; margin-right: 10px;">Save Config Permanently</button>
+                    <button type="button" onclick="toggleAdminSection()" class="logout-btn">Hide Admin Panel</button>
+                </div>
+                <div id="configStatus" style="margin-top: 10px; padding: 10px; border-radius: 5px; display: none;"></div>
             </div>
 
             <!-- Admin Access Button (Double-click to show admin panel) -->
@@ -472,6 +478,13 @@
     </div>
 
     <script>
+        // Embedded GitHub Configuration (Hidden from users, set by admin)
+        const GITHUB_CONFIG = {
+            owner: "",
+            repo: "", 
+            token: ""
+        };
+
         // Admin panel toggle function
         function toggleAdminSection() {
             const adminSection = document.getElementById('adminSection');
@@ -479,6 +492,106 @@
                 adminSection.style.display = 'block';
             } else {
                 adminSection.style.display = 'none';
+            }
+        }
+
+        // Save GitHub configuration permanently to the HTML file
+        function saveConfigToFile() {
+            const owner = document.getElementById('githubOwner').value;
+            const repo = document.getElementById('githubRepo').value;
+            const token = document.getElementById('githubToken').value;
+
+            if (!owner || !repo || !token) {
+                alert('Please fill in all GitHub configuration fields first!');
+                return;
+            }
+
+            // Update the embedded config
+            GITHUB_CONFIG.owner = owner;
+            GITHUB_CONFIG.repo = repo;
+            GITHUB_CONFIG.token = token;
+
+            // Show success message
+            const statusDiv = document.getElementById('configStatus');
+            statusDiv.style.display = 'block';
+            statusDiv.style.background = '#d4edda';
+            statusDiv.style.color = '#155724';
+            statusDiv.innerHTML = `✅ Configuration saved! Now download and redistribute this file.<br><br>
+                <strong>Next Steps:</strong><br>
+                1. Right-click this page → "Save As" → save the HTML file<br>
+                2. Upload the saved file to your GitHub Pages or web server<br>
+                3. Share the new URL with your team<br><br>
+                <strong>Important:</strong> Use the newly saved file, not the original one!`;
+
+            alert('✅ Configuration saved to the form!\n\nIMPORTANT: You must now download/save this HTML file and use that version.\nThe current page now contains your GitHub settings embedded in it.');
+        }
+
+        // Test GitHub connection function
+        async function testGitHubConnection() {
+            // Try embedded config first, then form inputs
+            let owner = GITHUB_CONFIG.owner || document.getElementById('githubOwner').value;
+            let repo = GITHUB_CONFIG.repo || document.getElementById('githubRepo').value;
+            let token = GITHUB_CONFIG.token || document.getElementById('githubToken').value;
+
+            if (!owner || !repo) {
+                alert('Please fill in GitHub Username and Repository Name first!');
+                return;
+            }
+
+            console.log('Testing GitHub connection...', { 
+                owner, 
+                repo, 
+                hasToken: !!token,
+                configSource: GITHUB_CONFIG.owner ? 'embedded' : 'form'
+            });
+
+            try {
+                const headers = {
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Content-Type': 'application/json'
+                };
+
+                if (token) {
+                    headers['Authorization'] = `token ${token}`;
+                }
+
+                // Test repository access
+                const response = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
+                    method: 'GET',
+                    headers: headers
+                });
+
+                if (response.ok) {
+                    const repoData = await response.json();
+                    
+                    // Check if we can access issues endpoint
+                    const issuesResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/issues`, {
+                        method: 'GET',
+                        headers: headers
+                    });
+                    
+                    if (issuesResponse.ok) {
+                        alert(`✅ Connection successful!\n\nRepository: ${repoData.full_name}\nPrivate: ${repoData.private}\nIssues Access: ✅ Confirmed\n\nYou can now submit forms to create issues!`);
+                    } else if (issuesResponse.status === 403) {
+                        alert(`⚠️ Repository found but insufficient permissions!\n\nRepository: ${repoData.full_name}\nPrivate: ${repoData.private}\nIssues Access: ❌ Denied\n\nYour token needs "repo" scope for private repositories.`);
+                    } else {
+                        alert(`⚠️ Repository found but issues access uncertain.\n\nRepository: ${repoData.full_name}\nTry submitting a form to test.`);
+                    }
+                } else {
+                    const errorText = await response.text();
+                    console.error('Repository test failed:', response.status, errorText);
+                    
+                    if (response.status === 404) {
+                        alert(`❌ Repository "${owner}/${repo}" not found!\n\nPossible issues:\n1. Repository doesn't exist\n2. Repository name is misspelled\n3. Repository is private and token is missing/invalid\n4. You don't have access to this repository`);
+                    } else if (response.status === 401) {
+                        alert('❌ Authentication failed!\n\nYour GitHub token is invalid or expired.');
+                    } else {
+                        alert(`❌ Connection failed: ${response.status} - ${response.statusText}`);
+                    }
+                }
+            } catch (error) {
+                console.error('Network error:', error);
+                alert('❌ Network error! Check your internet connection.');
             }
         }
 
@@ -592,14 +705,23 @@
 
         // GitHub API integration for data collection
         async function submitToGitHub(data) {
-            const owner = document.getElementById('githubOwner').value;
-            const repo = document.getElementById('githubRepo').value;
-            const token = document.getElementById('githubToken').value;
+            // Try embedded config first, then fallback to form inputs
+            let owner = GITHUB_CONFIG.owner || document.getElementById('githubOwner').value;
+            let repo = GITHUB_CONFIG.repo || document.getElementById('githubRepo').value;
+            let token = GITHUB_CONFIG.token || document.getElementById('githubToken').value;
 
             if (!owner || !repo) {
                 console.log('GitHub configuration not found, skipping GitHub submission');
                 return false;
             }
+
+            console.log('Attempting to submit to GitHub:', {
+                owner: owner,
+                repo: repo,
+                hasToken: !!token,
+                url: `https://api.github.com/repos/${owner}/${repo}/issues`,
+                configSource: GITHUB_CONFIG.owner ? 'embedded' : 'form'
+            });
 
             const currentMonthName = monthNames[currentMonth];
             const nextMonthName = monthNames[nextMonth];
@@ -676,9 +798,20 @@
                     console.log('Issue created successfully:', result.html_url);
                     return true;
                 } else {
-                    console.error('Failed to create issue:', response.statusText);
+                    console.error('Failed to create issue:', response.status, response.statusText);
                     const errorText = await response.text();
                     console.error('Error details:', errorText);
+                    
+                    // Provide specific error messages
+                    if (response.status === 404) {
+                        alert(`❌ Repository not found!\n\nPlease check:\n1. Repository "${owner}/${repo}" exists\n2. Repository name is spelled correctly\n3. You have access to this repository\n4. Your token has proper permissions`);
+                    } else if (response.status === 401) {
+                        alert('❌ Authentication failed! Please check your GitHub token.');
+                    } else if (response.status === 403) {
+                        alert(`❌ Permission denied!\n\nYour GitHub token doesn't have sufficient permissions.\n\nTo fix this:\n1. Go to GitHub → Settings → Developer settings → Personal access tokens\n2. Delete your current token\n3. Create a new token with "repo" scope (full control)\n4. Copy the new token to the form\n\nFor private repos, you need "repo" permission, not just "public_repo".`);
+                    } else {
+                        alert(`❌ GitHub API Error: ${response.status} - ${response.statusText}`);
+                    }
                     return false;
                 }
             } catch (error) {
